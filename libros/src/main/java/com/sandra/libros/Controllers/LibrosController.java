@@ -66,7 +66,8 @@ public ResponseEntity<LibrosModel> editarLibro(@PathVariable Long id, @RequestBo
         libro.setImagen(libroActualizado.getImagen());
 
         LibrosModel libroGuardado = librosRepository.save(libro);
-        return ResponseEntity.ok(libroActualizado);
+        return ResponseEntity.ok(libroGuardado);
+
     } else {
         return ResponseEntity.notFound().build();
     }

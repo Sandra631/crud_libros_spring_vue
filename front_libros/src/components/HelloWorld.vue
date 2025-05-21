@@ -5,7 +5,9 @@
 
       <!-- Formulario para agregar libros -->
       <div class="card p-4 mb-4 formulario shadow">
-        <h5 class="mb-3 text-center subtitulo">Agregar nuevo libro</h5>
+        <h5 class="mb-3 text-center subtitulo">
+          {{ editandoId !== null ? 'Editar libro' : 'Agregar nuevo libro' }}
+        </h5>
         <form @submit.prevent="agregarLibro">
           <div class="row g-2">
             <div class="col-md-6">
@@ -25,7 +27,10 @@
             </div>
           </div>
           <div class="text-end mt-3">
-            <button type="submit" class="btn btn-rosa">📥 Guardar</button>
+            <button type="submit" class="btn btn-rosa">
+              {{ editandoId !== null ? '💾 Actualizar' : '📥 Guardar' }}
+            </button>
+            <button v-if="editandoId !== null" type="button" class="btn btn-secondary ms-2" @click="limpiarFormulario">❌ Cancelar</button>
           </div>
         </form>
       </div>
@@ -41,8 +46,8 @@
               <th>Título</th>
               <th>Autor</th>
               <th>Categoría</th>
-               <th style="width: 20%;">Descripción</th> <!-- Más angosto -->
-    <th style="width: 18%;">Acciones</th>    <!-- Más espacio para botones -->
+              <th style="width: 20%;">Descripción</th>
+              <th style="width: 18%;">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -56,7 +61,8 @@
               <td>{{ libro.categoria }}</td>
               <td>{{ libro.descripcion }}</td>
               <td>
-                <button class="btn btn-sm btn-eliminar" @click="eliminarLibro(libro.id)">🗑</button>
+                <button class="btn btn-warning btn-sm me-2" @click="editarLibro(libro)">✏️</button>
+                <button class="btn btn-eliminar btn-sm" @click="eliminarLibro(libro.id)">🗑️</button>
               </td>
             </tr>
           </tbody>
@@ -78,6 +84,7 @@ export default {
         descripcion: '',
         imagen: ''
       },
+      editandoId: null,
       urlBase: 'http://localhost:8080/libros'
     };
   },
@@ -91,6 +98,11 @@ export default {
         .catch(err => console.error("Error al obtener libros:", err));
     },
     agregarLibro() {
+      if (this.editandoId !== null) {
+        this.actualizarLibro();
+        return;
+      }
+
       fetch(`${this.urlBase}/insertar-libros`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -99,7 +111,7 @@ export default {
         .then(res => res.json())
         .then(() => {
           this.obtenerLibros();
-          this.nuevoLibro = { titulo: '', autor: '', categoria: '', descripcion: '', imagen: '' };
+          this.limpiarFormulario();
         })
         .catch(err => console.error("Error al guardar libro:", err));
     },
@@ -114,6 +126,29 @@ export default {
           })
           .catch(err => console.error("Error al eliminar libro:", err));
       }
+    },
+
+    editarLibro(libro) {
+      this.nuevoLibro = { ...libro };
+      this.editandoId = libro.id;
+    },
+    actualizarLibro() {
+      fetch(`${this.urlBase}/editar-libro/${this.editandoId}`, {
+
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(this.nuevoLibro)
+      })
+        .then(res => {
+          if (!res.ok) throw new Error("No se pudo actualizar el libro.");
+          this.obtenerLibros();
+          this.limpiarFormulario();
+        })
+        .catch(err => console.error("Error al actualizar libro:", err));
+    },
+    limpiarFormulario() {
+      this.nuevoLibro = { titulo: '', autor: '', categoria: '', descripcion: '', imagen: '' };
+      this.editandoId = null;
     }
   },
   mounted() {
@@ -155,6 +190,21 @@ export default {
 
 .btn-rosa:hover {
   background-color: #ad1457;
+}
+
+/* Botón eliminar */
+.btn-eliminar {
+  background-color: #dd231f;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-eliminar:hover {
+  background-color: #c62828;
 }
 
 /* Formulario y tarjetas */
@@ -201,19 +251,4 @@ export default {
   border-radius: 8px;
   object-fit: cover;
 }
-
-.btn-eliminar {
-  background-color: #dd231f;
-  color: white;
-  padding: 6px 15px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  border: none;
-  transition: background-color 0.3s ease;
-}
-
-.btn-eliminar:hover {
-  background-color: #c62828;
-}
-
 </style>
