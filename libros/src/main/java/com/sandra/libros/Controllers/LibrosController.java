@@ -24,7 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5173") 
+//dando permisos CrossOrigin
 @RestController
 @RequestMapping("/libros")
 public class LibrosController {
