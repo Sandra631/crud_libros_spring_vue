@@ -3,6 +3,11 @@
     <div class="container mt-5">
       <h1 class="titulo text-center mb-4">📚 Gestión de Libros</h1>
 
+      <!-- Mensaje de éxito -->
+      <div v-if="mensajeExito" class="alert alert-success text-center">
+        {{ mensajeExito }}
+      </div>
+
       <!-- Formulario para agregar libros -->
       <div class="card p-4 mb-4 formulario shadow">
         <h5 class="mb-3 text-center subtitulo">
@@ -61,7 +66,7 @@
               <td>{{ libro.categoria }}</td>
               <td>{{ libro.descripcion }}</td>
               <td>
-                <button class="btn btn-warning btn-sm me-2" @click="editarLibro(libro)">✏️</button>
+                <button class="btn btn-editar btn-sm me-2" @click="editarLibro(libro)">✏️</button>
                 <button class="btn btn-eliminar btn-sm" @click="eliminarLibro(libro.id)">🗑️</button>
               </td>
             </tr>
@@ -85,6 +90,7 @@ export default {
         imagen: ''
       },
       editandoId: null,
+      mensajeExito: '',
       urlBase: 'http://localhost:8080/libros'
     };
   },
@@ -127,22 +133,25 @@ export default {
           .catch(err => console.error("Error al eliminar libro:", err));
       }
     },
-
     editarLibro(libro) {
       this.nuevoLibro = { ...libro };
       this.editandoId = libro.id;
     },
     actualizarLibro() {
       fetch(`${this.urlBase}/editar-libro/${this.editandoId}`, {
-
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(this.nuevoLibro)
       })
         .then(res => {
           if (!res.ok) throw new Error("No se pudo actualizar el libro.");
+          return res.json();
+        })
+        .then(() => {
           this.obtenerLibros();
           this.limpiarFormulario();
+          this.mensajeExito = "✅ Libro actualizado exitosamente.";
+          setTimeout(() => this.mensajeExito = "", 3000);
         })
         .catch(err => console.error("Error al actualizar libro:", err));
     },
@@ -158,7 +167,6 @@ export default {
 </script>
 
 <style scoped>
-/* Fondo difuminado */
 .contenedor {
   background: linear-gradient(to right top, #ffcbda, #f6f8a3, #ffaff2);
   min-height: 100vh;
@@ -166,7 +174,6 @@ export default {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Título principal */
 .titulo {
   font-size: 3rem;
   font-weight: bold;
@@ -174,13 +181,11 @@ export default {
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.751);
 }
 
-/* Subtítulos */
 .subtitulo {
   font-size: 1.3rem;
   color: #444;
 }
 
-/* Botón rosa personalizado */
 .btn-rosa {
   background-color: #fc5e9d;
   color: white;
@@ -192,7 +197,6 @@ export default {
   background-color: #ad1457;
 }
 
-/* Botón eliminar */
 .btn-eliminar {
   background-color: #dd231f;
   color: white;
@@ -207,7 +211,21 @@ export default {
   background-color: #c62828;
 }
 
-/* Formulario y tarjetas */
+/* NUEVO: Botón editar igual al de eliminar pero en rosa */
+.btn-editar {
+  background-color: #fcf45e;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-editar:hover {
+  background-color: #ad1457;
+}
+
 .formulario,
 .card {
   background-color: rgba(255, 255, 255, 0.95);
@@ -215,7 +233,6 @@ export default {
   border: none;
 }
 
-/* Tabla personalizada */
 .tabla-libros {
   border-collapse: separate;
   border-spacing: 0;
