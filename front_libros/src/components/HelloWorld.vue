@@ -36,17 +36,18 @@
         <table class="table tabla-libros text-center">
           <thead>
             <tr>
-               <th>ID</th>
+              <th>ID</th>
               <th>Imagen</th>
               <th>Título</th>
               <th>Autor</th>
               <th>Categoría</th>
-              <th>Descripción</th>
+               <th style="width: 20%;">Descripción</th> <!-- Más angosto -->
+    <th style="width: 18%;">Acciones</th>    <!-- Más espacio para botones -->
             </tr>
           </thead>
           <tbody>
             <tr v-for="libro in libros" :key="libro.id">
-               <td>{{ libro.id }}</td>
+              <td>{{ libro.id }}</td>
               <td>
                 <img :src="libro.imagen || 'https://via.placeholder.com/60'" width="60" height="60" />
               </td>
@@ -54,6 +55,9 @@
               <td>{{ libro.autor }}</td>
               <td>{{ libro.categoria }}</td>
               <td>{{ libro.descripcion }}</td>
+              <td>
+                <button class="btn btn-sm btn-eliminar" @click="eliminarLibro(libro.id)">🗑</button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -98,6 +102,18 @@ export default {
           this.nuevoLibro = { titulo: '', autor: '', categoria: '', descripcion: '', imagen: '' };
         })
         .catch(err => console.error("Error al guardar libro:", err));
+    },
+    eliminarLibro(id) {
+      if (confirm("¿Estás segura de que deseas eliminar este libro?")) {
+        fetch(`${this.urlBase}/eliminar-libro/${id}`, {
+          method: 'DELETE'
+        })
+          .then(res => {
+            if (!res.ok) throw new Error("No se pudo eliminar el libro.");
+            this.obtenerLibros();
+          })
+          .catch(err => console.error("Error al eliminar libro:", err));
+      }
     }
   },
   mounted() {
@@ -161,7 +177,7 @@ export default {
 }
 
 .tabla-libros thead tr {
-  background-color: #fdafca; /* Rosa pastel */
+  background-color: #fdafca;
   color: #4a4a4a;
 }
 
@@ -178,11 +194,26 @@ export default {
 }
 
 .tabla-libros tbody tr:hover {
-  background-color: #dc30a6; /* Hover rosa claro */
+  background-color: #dc30a6;
 }
 
 .tabla-libros img {
   border-radius: 8px;
   object-fit: cover;
 }
+
+.btn-eliminar {
+  background-color: #dd231f;
+  color: white;
+  padding: 6px 15px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-eliminar:hover {
+  background-color: #c62828;
+}
+
 </style>
