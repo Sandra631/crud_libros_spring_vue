@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import java.util.Optional;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -33,6 +35,13 @@ public class LibrosController {
         return librosRepository.findAll();
        
     }
+    @GetMapping("/traer-libros/{id}")
+public ResponseEntity<LibrosModel> TraerLibroPorId(@PathVariable Long id) {
+    return librosRepository.findById(id)
+        .map(libro -> ResponseEntity.ok(libro))
+        .orElse(ResponseEntity.notFound().build());
+}
+    
     //Metodo para insertar un libro a la base de datos
     @PostMapping("/insertar-libros")
 public LibrosModel insertarLibros(@RequestBody LibrosModel libro) {
