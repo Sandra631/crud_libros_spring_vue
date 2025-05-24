@@ -8,7 +8,7 @@
         {{ mensajeExito }}
       </div>
 
-      <!-- Formulario para agregar libros -->
+      <!-- Formulario para agregar o editar libros -->
       <div class="card p-4 mb-4 formulario shadow">
         <h5 class="mb-3 text-center subtitulo">
           {{ editandoId !== null ? 'Editar libro' : 'Agregar nuevo libro' }}
@@ -118,6 +118,8 @@ export default {
         .then(() => {
           this.obtenerLibros();
           this.limpiarFormulario();
+          this.mensajeExito = "✅ Libro agregado exitosamente.";
+          setTimeout(() => this.mensajeExito = "", 3000);
         })
         .catch(err => console.error("Error al guardar libro:", err));
     },
@@ -129,6 +131,8 @@ export default {
           .then(res => {
             if (!res.ok) throw new Error("No se pudo eliminar el libro.");
             this.obtenerLibros();
+            this.mensajeExito = "🗑️ Libro eliminado exitosamente.";
+            setTimeout(() => this.mensajeExito = "", 3000);
           })
           .catch(err => console.error("Error al eliminar libro:", err));
       }
@@ -150,7 +154,7 @@ export default {
         .then(() => {
           this.obtenerLibros();
           this.limpiarFormulario();
-          this.mensajeExito = "✅ Libro actualizado exitosamente.";
+          this.mensajeExito = "💾 Libro actualizado exitosamente.";
           setTimeout(() => this.mensajeExito = "", 3000);
         })
         .catch(err => console.error("Error al actualizar libro:", err));
@@ -211,9 +215,8 @@ export default {
   background-color: #c62828;
 }
 
-/* NUEVO: Botón editar igual al de eliminar pero en rosa */
 .btn-editar {
-  background-color: #fcf45e;
+  background-color: #f6e764;
   color: white;
   padding: 5px 10px;
   border-radius: 12px;
