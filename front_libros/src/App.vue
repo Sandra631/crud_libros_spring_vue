@@ -99,7 +99,7 @@ export default {
       },
       editandoId: null,
       mensajeExito: '',
-      urlBase: 'https://crud-libros-spring-vue-backend.onrender.com/libros'
+      urlBase: import.meta.env.VITE_API_URL + '/libros'
     };
   },
   methods: {
