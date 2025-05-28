@@ -16,7 +16,8 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173") // Vite local
+                .allowedOrigins("https://unique-marzipan-3b6861.netlify.app/") 
+                        //.allowedOrigins("http://localhost:5173") // Vite local
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*");
             }
