@@ -99,7 +99,7 @@ export default {
       },
       editandoId: null,
       mensajeExito: '',
-      urlBase: 'http://localhost:8080/libros'
+      urlBase: 'https://crud-libros-spring-vue-backend.onrender.com/libros'
     };
   },
   methods: {
