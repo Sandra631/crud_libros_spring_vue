@@ -24,8 +24,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 
-@CrossOrigin(origins = "http://localhost:5173") 
+//@CrossOrigin(origins = "http://localhost:5173") 
 //dando permisos CrossOrigin
+
+@CrossOrigin(origins = {
+    "http://localhost:5173",
+    "https://unique-marzipan-3b6861.netlify.app"
+})
+
+
 @RestController
 @RequestMapping("/libros")
 public class LibrosController {
