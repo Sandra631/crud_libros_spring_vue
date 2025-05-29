@@ -102,6 +102,13 @@ export default {
       urlBase: import.meta.env.VITE_API_URL + '/libros'
     };
   },
+
+    mounted() {
+    console.log("API URL:", this.urlBase); // Verifica que esté bien definida
+    this.obtenerLibros(); //Llama a la API
+  },
+
+
   methods: {
     obtenerLibros() {
       axios.get(`${this.urlBase}/traer-libros`)
