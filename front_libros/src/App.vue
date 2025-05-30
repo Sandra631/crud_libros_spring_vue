@@ -171,28 +171,36 @@ export default {
     },
     actualizarLibro() {
   Swal.fire({
-    title: "¿Deseas guardar los cambios?",
-    showDenyButton: true,
-    showCancelButton: true,
-    confirmButtonText: "Guardar",
-    denyButtonText: "No guardar"
-  }).then((result) => {
-    if (result.isConfirmed) {
+  title: "¿Guardar cambios?",
+  text: "¿Estás seguro de que deseas guardar los cambios realizados?",
+  icon: "question",
+  showCancelButton: true,
+  confirmButtonColor: "#3085d6",
+  cancelButtonColor: "#d33",
+  confirmButtonText: "Sí, guardar",
+  cancelButtonText: "Cancelar"
+}).then((result) => {
+  if (result.isConfirmed) {
+
       axios.put(`${this.urlBase}/editar-libro/${this.editandoId}`, this.nuevoLibro)
         .then(() => {
           this.obtenerLibros();
           this.limpiarFormulario();
-          Swal.fire("Cambios guardados", "", "success");
-        })
-        .catch(err => {
-          console.error("Error al actualizar libro:", err);
-          Swal.fire("Error al guardar los cambios", "", "error");
-        });
-    } else if (result.isDenied) {
-      Swal.fire("Los cambios no se guardaron", "", "info");
-    }
-  });
-},
+         
+          Swal.fire({
+                title: "¡Guardado!",
+                text: "Los cambios han sido guardados exitosamente.",
+                icon: "success"
+              });
+            })
+            .catch(err => {
+              console.error("Error al actualizar libro:", err);
+              Swal.fire("Error", "Ocurrió un error al guardar los cambios.", "error");
+            });
+        }
+      });
+    },
+    
 limpiarFormulario() {
       this.nuevoLibro = { titulo: '', autor: '', categoria: '', descripcion: '', imagen: '' };
       this.editandoId = null;
