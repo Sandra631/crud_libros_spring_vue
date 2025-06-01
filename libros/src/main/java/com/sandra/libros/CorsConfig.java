@@ -18,7 +18,12 @@ public class CorsConfig {
                 registry.addMapping("/**")
                 .allowedOrigins("https://unique-marzipan-3b6861.netlify.app") 
                         //.allowedOrigins("http://localhost:5173") // Vite local
-                        .allowedOriginPatterns("*") // También permite orígenes nulos y dinámicos
+                        .allowedOrigins(
+    "https://unique-marzipan-3b6861.netlify.app", // Frontend web
+    "http://localhost:5173",                      // Vite local (opcional)
+    "null"                                        // Android apps
+)
+
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*");
             }
